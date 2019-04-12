@@ -30,7 +30,6 @@ const Layout = ({ children }) => (
           id="mainContentLayout"
           style={{
             margin: `6rem 3rem`,
-            maxWidth: 960,
             padding: `0px 1.0875rem 1.45rem`,
             paddingTop: 0,
             transition: "margin .4s",

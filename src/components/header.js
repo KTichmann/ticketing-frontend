@@ -126,7 +126,7 @@ class Header extends React.Component {
         ).style.margin = `6rem 3rem`)
       : (document.getElementById(
           "mainContentLayout"
-        ).style.margin = `6rem 15rem`)
+        ).style.margin = `6rem 3rem 6rem 15rem`)
   }
   render() {
     const { open } = this.state
