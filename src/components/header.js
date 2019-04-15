@@ -117,16 +117,16 @@ class Header extends React.Component {
   handleDrawerClose = () => {
     this.setState({ open: false })
   }
-  componentWillUpdate() {
+  componentDidUpdate() {
     const { open } = this.state
 
     open
       ? (document.getElementById(
           "mainContentLayout"
-        ).style.margin = `6rem 3rem`)
+        ).style.margin = `6rem 3rem 6rem 15rem`)
       : (document.getElementById(
           "mainContentLayout"
-        ).style.margin = `6rem 3rem 6rem 15rem`)
+        ).style.margin = `6rem 3rem`)
   }
   render() {
     const { open } = this.state
