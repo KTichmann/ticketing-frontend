@@ -1,4 +1,4 @@
-chef trez vsimport PropTypes from "prop-types"
+import PropTypes from "prop-types"
 import React from "react"
 import Drawer from "@material-ui/core/Drawer"
 import AppBar from "@material-ui/core/AppBar"
