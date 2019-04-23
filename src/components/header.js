@@ -109,6 +109,16 @@ const styles = theme => ({
 class Header extends React.Component {
   state = {
     open: false,
+    groups: [],
+  }
+
+  fetchData = () => {
+    fetch("http://localhost:5000/group/list", {
+      method: "POST",
+      authorization: window.sessionStorage.getItem("ticketing_token"),
+    })
+      .then(result => console.log(result))
+      .catch(error => console.log(error))
   }
 
   handleDrawerOpen = () => {
@@ -128,7 +138,9 @@ class Header extends React.Component {
           "mainContentLayout"
         ).style.margin = `6rem 3rem`)
   }
+
   render() {
+    this.fetchData()
     const { open } = this.state
     const { classes } = this.props
 
