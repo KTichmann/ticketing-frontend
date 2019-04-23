@@ -1,73 +1,245 @@
-import { Link } from "gatsby"
-import PropTypes from "prop-types"
+chef trez vsimport PropTypes from "prop-types"
 import React from "react"
 import Drawer from "@material-ui/core/Drawer"
 import AppBar from "@material-ui/core/AppBar"
 import Toolbar from "@material-ui/core/Toolbar"
-import List from "@material-ui/core/List"
-import Divider from "@material-ui/core/Divider"
 import IconButton from "@material-ui/core/IconButton"
-import MenuIcon from "@material-ui/icons/Menu"
-import CloseIcon from "@material-ui/icons/Close"
+import Divider from "@material-ui/core/Divider"
+import classNames from "classnames"
 import ListItem from "@material-ui/core/ListItem"
-import ListItemText from "@material-ui/core/ListItemText"
 import ListItemIcon from "@material-ui/core/ListItemIcon"
+import List from "@material-ui/core/List"
+import ListItemText from "@material-ui/core/ListItemText"
+import MenuIcon from "@material-ui/icons/Menu"
+import { withStyles } from "@material-ui/core/styles"
+import Typography from "@material-ui/core/Typography"
 import DashboardIcon from "@material-ui/icons/Dashboard"
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft"
+import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount"
+import Avatar from "@material-ui/core/Avatar"
+import astronaut from "../images/avatar.png"
+import Grid from "@material-ui/core/Grid"
+import { createMuiTheme, MuiThemeProvider } from "@material-ui/core"
 
+const drawerWidth = 240
+
+const theme = createMuiTheme({
+  typography: {
+    fontFamily: "Lato",
+  },
+  overrides: {
+    MuiTypography: {
+      body1: {
+        color: "white",
+      },
+      subheading: {
+        color: "white",
+      },
+    },
+  },
+})
+
+const styles = theme => ({
+  root: {
+    display: "flex",
+    color: "white !important",
+  },
+  appBar: {
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth,
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  menuButton: {
+    marginLeft: 12,
+    marginRight: 20,
+  },
+  hide: {
+    display: "none",
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+    backgroundColor: "#3A1772",
+    padding: "0px",
+    overflow: "hidden",
+  },
+  drawerHeader: {
+    display: "flex",
+    alignItems: "center",
+    padding: "0 8px",
+    ...theme.mixins.toolbar,
+    justifyContent: "flex-end",
+  },
+  avatarSection: {
+    padding: "1rem",
+    backgroundColor: "rgba(255, 255, 255, .15)",
+    fontFamily: "Roboto Condensed",
+  },
+  bigAvatar: {
+    margin: 10,
+    width: 60,
+    height: 60,
+  },
+  groupsSection: {
+    boxShadow: "0px -2px 1px 1px rgba(0,0,0,.1)",
+    paddingTop: "0px",
+  },
+  group: {
+    borderBottom: ".5px solid rgba(255,255,255,.1)",
+    textAlign: "center",
+    transition: "background-color .7s",
+    "&:hover": {
+      backgroundColor: "rgba(250, 250, 250, .2)",
+      transition: "background-color .7s",
+    },
+  },
+})
 class Header extends React.Component {
   state = {
     open: false,
+    groups: [],
+  }
+
+  fetchData = () => {
+    fetch("http://localhost:5000/group/list", {
+      method: "POST",
+      authorization: window.sessionStorage.getItem("ticketing_token"),
+    })
+      .then(result => console.log(result))
+      .catch(error => console.log(error))
   }
 
   handleDrawerOpen = () => {
     this.setState({ open: true })
   }
-
   handleDrawerClose = () => {
     this.setState({ open: false })
   }
-
-  render() {
+  componentDidUpdate() {
     const { open } = this.state
 
+    open
+      ? (document.getElementById(
+          "mainContentLayout"
+        ).style.margin = `6rem 3rem 6rem 15rem`)
+      : (document.getElementById(
+          "mainContentLayout"
+        ).style.margin = `6rem 3rem`)
+  }
+
+  render() {
+    this.fetchData()
+    const { open } = this.state
+    const { classes } = this.props
+
     return (
-      <div>
-        <AppBar position="fixed">
-          <Toolbar disableGutters={!open}>
-            <IconButton
-              color="inherit"
-              aria-label="Open drawer"
-              onClick={this.handleDrawerOpen}
+      <MuiThemeProvider theme={theme}>
+        <header className={classes.root}>
+          <AppBar
+            position="fixed"
+            className={classNames(classes.appBar, {
+              [classes.appBarShift]: open,
+            })}
+          >
+            <Toolbar>
+              <IconButton
+                color="inherit"
+                aria-label="Open Drawer"
+                onClick={this.handleDrawerOpen}
+                className={classNames(classes.menuButton, open && classes.hide)}
+              >
+                <MenuIcon />
+              </IconButton>
+              {open ? (
+                false
+              ) : (
+                <Typography variant="h6" color="inherit" noWrap>
+                  bOnline
+                </Typography>
+              )}
+            </Toolbar>
+          </AppBar>
+          <Drawer
+            variant="persistent"
+            anchor="left"
+            open={open}
+            className={classes.drawer}
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+          >
+            <div className={classes.drawerHeader}>
+              <Typography
+                variant="h6"
+                color="inherit"
+                noWrap
+                style={{ left: "30px", position: "fixed", color: "white" }}
+              >
+                bOnline
+              </Typography>
+              <IconButton color="inherit" onClick={this.handleDrawerClose}>
+                <ChevronLeftIcon />
+              </IconButton>
+            </div>
+            <Divider />
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+              className={classes.avatarSection}
             >
-              <MenuIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <Drawer variant="persistent" anchor="left" open={open}>
-          <div style={{ marginLeft: "9rem" }}>
-            <IconButton onClick={this.handleDrawerClose}>
-              <CloseIcon />
-            </IconButton>
-          </div>
-          <Divider />
-          <List>
-            <ListItem button key={"Admin Dashboard"}>
-              <ListItemIcon style={{ marginRight: "0px" }}>
-                <DashboardIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Admin Dashboard"} />
-            </ListItem>
-            {/* {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              <Avatar
+                alt="Remy"
+                src={astronaut}
+                className={classes.bigAvatar}
+              />
+              <Typography variant="h6" color="inherit" noWrap>
+                Username
+              </Typography>
+            </Grid>
+            <List className={classes.groupsSection}>
+              {["Group 1", "Group 2", "Group 3"].map(text => (
+                <ListItem className={classes.group} button key={text}>
+                  <ListItemText
+                    style={{ color: "white !important" }}
+                    primary={text}
+                  />
+                </ListItem>
+              ))}
+            </List>
+            <List
+              className={classes.drawerPaper}
+              style={{ bottom: "0rem", position: "fixed", color: "white" }}
+            >
+              <ListItem button key="dashboard">
+                <ListItemIcon color="inherit">
+                  <DashboardIcon style={{ color: "white" }} />
                 </ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText primary="Dashboard" />
               </ListItem>
-            ))} */}
-          </List>
-        </Drawer>
-      </div>
+              <ListItem button key="dashboard">
+                <ListItemIcon color="inherit">
+                  <SupervisorAccountIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemText primary="Profile" />
+              </ListItem>
+            </List>
+          </Drawer>
+        </header>
+      </MuiThemeProvider>
     )
   }
 }
@@ -80,4 +252,4 @@ Header.defaultProps = {
   siteTitle: ``,
 }
 
-export default Header
+export default withStyles(styles, { withTheme: true })(Header)
