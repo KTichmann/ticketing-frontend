@@ -5,6 +5,7 @@ import PropTypes from "prop-types"
 import Card from "@material-ui/core/Card"
 import CardContent from "@material-ui/core/CardContent"
 import Typography from "@material-ui/core/Typography"
+const { API_URL } = process.env
 
 const styles = theme => ({
   root: {
@@ -46,96 +47,67 @@ const styles = theme => ({
   },
 })
 
-function IndexPage(props) {
-  const { classes } = props
+class IndexPage extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      groups: [],
+    }
+  }
+  componentDidMount() {
+    this.fetchData()
+  }
 
-  return (
-    <Layout>
-      <div className={classes.root}>
-        <Card className={classes.card}>
-          <CardContent className={classes.cardContent}>
-            <Typography className={classes.title} color="textSecondary">
-              Title
-            </Typography>
-            <Typography className={classes.text} color="textSecondary">
-              Description description description description
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card className={classes.card}>
-          <CardContent className={classes.cardContent}>
-            <Typography className={classes.title} color="textSecondary">
-              Title
-            </Typography>
-            <Typography className={classes.text} color="textSecondary">
-              Description description description description
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card className={classes.card}>
-          <CardContent className={classes.cardContent}>
-            <Typography className={classes.title} color="textSecondary">
-              Title
-            </Typography>
-            <Typography className={classes.text} color="textSecondary">
-              Description description description description
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card className={classes.card}>
-          <CardContent className={classes.cardContent}>
-            <Typography className={classes.title} color="textSecondary">
-              Title
-            </Typography>
-            <Typography className={classes.text} color="textSecondary">
-              Description description description description
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card className={classes.card}>
-          <CardContent className={classes.cardContent}>
-            <Typography className={classes.title} color="textSecondary">
-              Title
-            </Typography>
-            <Typography className={classes.text} color="textSecondary">
-              Description description description description
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card className={classes.card}>
-          <CardContent className={classes.cardContent}>
-            <Typography className={classes.title} color="textSecondary">
-              Title
-            </Typography>
-            <Typography className={classes.text} color="textSecondary">
-              Description description description description
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card className={classes.card}>
-          <CardContent className={classes.cardContent}>
-            <Typography className={classes.title} color="textSecondary">
-              Title
-            </Typography>
-            <Typography className={classes.text} color="textSecondary">
-              Description description description description
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card className={classes.card}>
-          <CardContent className={classes.cardContent}>
-            <Typography className={classes.title} color="textSecondary">
-              Title
-            </Typography>
-            <Typography className={classes.text} color="textSecondary">
-              Description description description description
-            </Typography>
-          </CardContent>
-        </Card>
-        <div className={`${classes.card} ${classes.hidden}`} />
-      </div>
-    </Layout>
-  )
+  fetchData() {
+    fetch(`${API_URL}/group/list`, {
+      method: "POST",
+      headers: {
+        Authorization: window.sessionStorage.getItem("ticketing_token"),
+      },
+    })
+      .then(result => result.json())
+      .then(result => {
+        console.log(result)
+        if (result.data) {
+          this.setState({
+            groups: result.data,
+          })
+        }
+      })
+      .catch(error => console.log(error))
+  }
+
+  render() {
+    return (
+      <Layout>
+        <div className={this.props.classes.root}>
+          {this.state.groups.map(group => (
+            <Card className={this.props.classes.card} key={group.group_id}>
+              <CardContent className={this.props.classes.cardContent}>
+                <Typography
+                  className={this.props.classes.title}
+                  color="textSecondary"
+                >
+                  {group.title}
+                </Typography>
+                <Typography
+                  className={this.props.classes.text}
+                  color="textSecondary"
+                >
+                  {group.description}
+                </Typography>
+              </CardContent>
+            </Card>
+          ))}
+          <div
+            className={`${this.props.classes.card} ${
+              this.props.classes.hidden
+            }`}
+          />
+        </div>
+      </Layout>
+    )
+  }
 }
 
 IndexPage.propTypes = {

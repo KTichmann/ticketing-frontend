@@ -2,6 +2,7 @@ import React from "react"
 import { Link } from "gatsby"
 import Layout from "../../components/layout"
 import Form from "../../components/form"
+const { API_URL } = process.env
 
 class LogInPage extends React.Component {
   constructor(props) {
@@ -40,7 +41,7 @@ class LogInPage extends React.Component {
     }
 
     if (password && username) {
-      let url = "https://localhost:5000/user/login"
+      let url = `${API_URL}/user/authenticate`
       let data = `username=${username}&password=${password}`
 
       fetch(url, {
@@ -52,10 +53,15 @@ class LogInPage extends React.Component {
       })
         .then(res => res.json())
         .then(res => {
+          console.log("res: ", res)
           if (res.success) {
-            window.sessionStorage.setItem("token", res.token)
+            window.sessionStorage.setItem("ticketing_token", res.token)
             window.sessionStorage.setItem("ticketing_username", username)
-            // window.location.href = "/forum-frontend"
+            window.location.href = "/"
+          } else if (res.message.includes("email not verified")) {
+            this.setState({
+              usernameErrorMessage: "Email not verified",
+            })
           } else {
             this.setState({
               usernameError: true,
@@ -64,7 +70,7 @@ class LogInPage extends React.Component {
             })
           }
         })
-        .catch(error => console.log(error))
+        .catch(error => console.log("error: ", error))
     }
   }
   render() {

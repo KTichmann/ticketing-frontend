@@ -14,12 +14,14 @@ import MenuIcon from "@material-ui/icons/Menu"
 import { withStyles } from "@material-ui/core/styles"
 import Typography from "@material-ui/core/Typography"
 import DashboardIcon from "@material-ui/icons/Dashboard"
+import AddBoxIcon from "@material-ui/icons/AddBox"
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft"
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount"
 import Avatar from "@material-ui/core/Avatar"
 import astronaut from "../images/avatar.png"
 import Grid from "@material-ui/core/Grid"
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core"
+const { API_URL } = process.env
 
 const drawerWidth = 240
 
@@ -111,13 +113,26 @@ class Header extends React.Component {
     open: false,
     groups: [],
   }
+  componentDidMount() {
+    this.fetchData()
+  }
 
-  fetchData = () => {
-    fetch("http://localhost:5000/group/list", {
+  fetchData() {
+    fetch(`${API_URL}/group/list`, {
       method: "POST",
-      authorization: window.sessionStorage.getItem("ticketing_token"),
+      headers: {
+        Authorization: window.sessionStorage.getItem("ticketing_token"),
+      },
     })
-      .then(result => console.log(result))
+      .then(result => result.json())
+      .then(result => {
+        console.log(result)
+        if (result.data) {
+          this.setState({
+            groups: result.data,
+          })
+        }
+      })
       .catch(error => console.log(error))
   }
 
@@ -140,7 +155,6 @@ class Header extends React.Component {
   }
 
   render() {
-    this.fetchData()
     const { open } = this.state
     const { classes } = this.props
 
@@ -211,11 +225,16 @@ class Header extends React.Component {
               </Typography>
             </Grid>
             <List className={classes.groupsSection}>
-              {["Group 1", "Group 2", "Group 3"].map(text => (
-                <ListItem className={classes.group} button key={text}>
+              {this.state.groups.map(group => (
+                <ListItem
+                  id={group.group_id}
+                  className={classes.group}
+                  button
+                  key={group.group_id}
+                >
                   <ListItemText
                     style={{ color: "white !important" }}
-                    primary={text}
+                    primary={group.title}
                   />
                 </ListItem>
               ))}
@@ -224,13 +243,19 @@ class Header extends React.Component {
               className={classes.drawerPaper}
               style={{ bottom: "0rem", position: "fixed", color: "white" }}
             >
-              <ListItem button key="dashboard">
+              <ListItem button>
+                <ListItemIcon color="inherit">
+                  <AddBoxIcon style={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemText primary="Create a Group" />
+              </ListItem>
+              <ListItem button>
                 <ListItemIcon color="inherit">
                   <DashboardIcon style={{ color: "white" }} />
                 </ListItemIcon>
                 <ListItemText primary="Dashboard" />
               </ListItem>
-              <ListItem button key="dashboard">
+              <ListItem button>
                 <ListItemIcon color="inherit">
                   <SupervisorAccountIcon style={{ color: "white" }} />
                 </ListItemIcon>

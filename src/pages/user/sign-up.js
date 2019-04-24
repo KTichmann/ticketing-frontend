@@ -2,6 +2,7 @@ import React from "react"
 import { Link } from "gatsby"
 import Layout from "../../components/layout"
 import Form from "../../components/form"
+const { API_URL } = process.env
 
 class SignUpPage extends React.Component {
   constructor(props) {
@@ -14,7 +15,6 @@ class SignUpPage extends React.Component {
       emailErrorMessage: "",
       passwordErrorMessage: "",
     }
-
     this.handleClick = this.handleClick.bind(this)
   }
   handleClick(e) {
@@ -24,6 +24,7 @@ class SignUpPage extends React.Component {
     const email = document.getElementById("email").value
     const checkEmailRegex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/
 
+    //START VALIDATION:
     //Make sure the username isn't empty
     if (!username) {
       this.setState({
@@ -54,9 +55,11 @@ class SignUpPage extends React.Component {
         emailErrorMessage: "Please input a valid email address",
       })
     }
+    //END VALIDATION
 
+    //START FETCH REQUEST
     if (password && username && email) {
-      let url = "https://localhost:5000/user/sign-up"
+      let url = `${API_URL}/user/sign-up`
       let data = `username=${username}&password=${password}&email=${email}`
 
       fetch(url, {
@@ -68,6 +71,7 @@ class SignUpPage extends React.Component {
       })
         .then(res => res.json())
         .then(res => {
+          console.log("res: ", res)
           if (res.success) {
             document.getElementById("relocate").click()
           } else if (res.message === "username taken") {
@@ -81,8 +85,9 @@ class SignUpPage extends React.Component {
             })
           }
         })
-        .catch(error => console.log(error))
+        .catch(error => console.log("error: ", error))
     }
+    //END FETCH REQUEST
   }
   render() {
     return (
@@ -104,12 +109,7 @@ class SignUpPage extends React.Component {
             Already a user? <Link to="/user/log-in">Log in here</Link>
           </div>
         </div>
-        <Link
-          to="/user/log-in"
-          id="relocate"
-          state={{ signed_up: true }}
-          style={{ display: "none" }}
-        />
+        <Link to="/user/verify" id="relocate" />
       </Layout>
     )
   }
