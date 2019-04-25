@@ -21,6 +21,7 @@ import Avatar from "@material-ui/core/Avatar"
 import astronaut from "../images/avatar.png"
 import Grid from "@material-ui/core/Grid"
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core"
+import { Link } from "gatsby"
 const { API_URL } = process.env
 
 const drawerWidth = 240
@@ -221,22 +222,24 @@ class Header extends React.Component {
                 className={classes.bigAvatar}
               />
               <Typography variant="h6" color="inherit" noWrap>
-                Username
+                {sessionStorage.getItem("ticketing_username")}
               </Typography>
             </Grid>
             <List className={classes.groupsSection}>
               {this.state.groups.map(group => (
-                <ListItem
-                  id={group.group_id}
-                  className={classes.group}
-                  button
-                  key={group.group_id}
-                >
-                  <ListItemText
-                    style={{ color: "white !important" }}
-                    primary={group.title}
-                  />
-                </ListItem>
+                <Link to="/ticket-dashboard">
+                  <ListItem
+                    id={group.group_id}
+                    className={classes.group}
+                    button
+                    key={group.group_id}
+                  >
+                    <ListItemText
+                      style={{ color: "white !important" }}
+                      primary={group.title}
+                    />
+                  </ListItem>
+                </Link>
               ))}
             </List>
             <List

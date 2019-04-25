@@ -4,6 +4,11 @@ import { withStyles } from "@material-ui/core/styles"
 import PropTypes from "prop-types"
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 
+//Get group_id from state
+// this.props.location.state
+//Fetch tickets & display them appropriately
+//When ticket is moved, update server...
+
 const styles = theme => ({})
 
 const move = (source, destination, droppableSource, droppableDestination) => {
@@ -57,49 +62,16 @@ const getListStyle = isDraggingOver => ({
 class TicketBoard extends React.Component {
   classes = this.props.classes
   state = {
-    toDo: [
-      { id: 1, content: "test" },
-      { id: 2, content: "testing" },
-      { id: 3, content: "test 2" },
-      { id: 4, content: "also more testing" },
-    ],
-    inProgress: [
-      { id: 5, content: "test" },
-      { id: 6, content: "test" },
-      { id: 7, content: "test" },
-      { id: 8, content: "test" },
-      { id: 9, content: "test" },
-      { id: 10, content: "test" },
-      { id: 11, content: "test" },
-      { id: 12, content: "test" },
-      { id: 13, content: "test" },
-      { id: 14, content: "test" },
-    ],
-    testing: [
-      { id: 15, content: "test" },
-      { id: 16, content: "test" },
-      { id: 17, content: "test" },
-      { id: 18, content: "test" },
-      { id: 19, content: "test" },
-      { id: 20, content: "test" },
-      { id: 21, content: "test" },
-      { id: 22, content: "test" },
-      { id: 23, content: "test" },
-      { id: 24, content: "test" },
-    ],
-    review: [
-      { id: 25, content: "test2" },
-      { id: 26, content: "test2" },
-      { id: 27, content: "test2" },
-      { id: 28, content: "test2" },
-      { id: 29, content: "test2" },
-      { id: 30, content: "test2" },
-      { id: 31, content: "test2" },
-      { id: 32, content: "test2" },
-      { id: 33, content: "test2" },
-      { id: 34, content: "test2" },
-    ],
+    toDo: [],
+    inProgress: [],
+    testing: [],
+    review: [],
     done: [],
+  }
+  componentDidMount() {
+    if (this.props.location.state) {
+      console.log(this.props.location.state.group_id)
+    }
   }
 
   getList = id => this.state[id]
