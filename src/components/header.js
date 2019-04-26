@@ -120,7 +120,6 @@ class Header extends React.Component {
 
   fetchData() {
     fetch(`${API_URL}/group/list`, {
-      method: "POST",
       headers: {
         Authorization: window.sessionStorage.getItem("ticketing_token"),
       },
@@ -227,7 +226,11 @@ class Header extends React.Component {
             </Grid>
             <List className={classes.groupsSection}>
               {this.state.groups.map(group => (
-                <Link to="/ticket-dashboard">
+                <Link
+                  key={group.group_id}
+                  to="/ticket-dashboard"
+                  state={{ group_id: group.group_id }}
+                >
                   <ListItem
                     id={group.group_id}
                     className={classes.group}

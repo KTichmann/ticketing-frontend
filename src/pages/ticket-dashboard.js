@@ -3,9 +3,8 @@ import Layout from "../components/layout"
 import { withStyles } from "@material-ui/core/styles"
 import PropTypes from "prop-types"
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
+const { API_URL } = process.env
 
-//Get group_id from state
-// this.props.location.state
 //Fetch tickets & display them appropriately
 //When ticket is moved, update server...
 
@@ -25,7 +24,7 @@ const move = (source, destination, droppableSource, droppableDestination) => {
   return result
 }
 
-// a little function to help us with reordering the result
+// a function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list)
   const [removed] = result.splice(startIndex, 1)
@@ -68,17 +67,68 @@ class TicketBoard extends React.Component {
     review: [],
     done: [],
   }
+
   componentDidMount() {
     if (this.props.location.state) {
-      console.log(this.props.location.state.group_id)
+      const token = sessionStorage.getItem("ticketing_token")
+      const group_id = this.props.location.state.group_id
+      fetch(`${API_URL}/ticket/list/${group_id}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+        .then(result => result.json())
+        .then(result => {
+          if (result.success) {
+            const data = result.data
+            let tickets = data.map(obj => ({
+              id: obj.id,
+              content: {
+                title: obj.title,
+                description: obj.description,
+              },
+              status: obj.status,
+            }))
+            this.setState({
+              toDo: tickets.filter(ticket => ticket.status === "to do"),
+              inProgress: tickets.filter(
+                ticket => ticket.status === "in progress"
+              ),
+              testing: tickets.filter(ticket => ticket.status === "testing"),
+              review: tickets.filter(ticket => ticket.status === "review"),
+              done: tickets.filter(ticket => ticket.status === "done"),
+            })
+          } else {
+            //TODO: Handle unsuccessful call
+          }
+        })
+        .catch(error => {
+          console.log("error: ", error)
+          //TODO: handle error
+        })
     }
   }
 
   getList = id => this.state[id]
 
-  onDragEnd = result => {
-    const { source, destination } = result
+  moveTicket(ticket_id, status) {
+    const data = `` //TODO!!!
+    fetch(`${API_URL}/ticket/move`, {
+      method: "POST",
+      headers: {
+        Authorization: sessionStorage.getItem("ticketing_token"),
+        ContentType: "application/x-www-form-urlencoded",
+      },
+      body: data,
+    })
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => console.log(error))
+  }
 
+  onDragEnd = result => {
+    const { source, destination, draggableId } = result
     // dropped outside the list
     if (!destination) {
       return
@@ -90,12 +140,12 @@ class TicketBoard extends React.Component {
         source.index,
         destination.index
       )
-
       let colId = source.droppableId
       let state = {}
       state[colId] = items
       this.setState(state)
     } else {
+      this.moveTicket(draggableId, destination.droppableId)
       const result = move(
         this.getList(source.droppableId),
         this.getList(destination.droppableId),
@@ -135,7 +185,8 @@ class TicketBoard extends React.Component {
                             provided.draggableProps.style
                           )}
                         >
-                          {item.content}
+                          <h4>{item.content.title}</h4>
+                          <p>{item.content.description}</p>
                         </div>
                       )}
                     </Draggable>
@@ -166,7 +217,8 @@ class TicketBoard extends React.Component {
                             provided.draggableProps.style
                           )}
                         >
-                          {item.content}
+                          <h4>{item.content.title}</h4>
+                          <p>{item.content.description}</p>
                         </div>
                       )}
                     </Draggable>
@@ -199,7 +251,8 @@ class TicketBoard extends React.Component {
                             provided.draggableProps.style
                           )}
                         >
-                          {item.content}
+                          <h4>{item.content.title}</h4>
+                          <p>{item.content.description}</p>
                         </div>
                       )}
                     </Draggable>
@@ -230,7 +283,8 @@ class TicketBoard extends React.Component {
                             provided.draggableProps.style
                           )}
                         >
-                          {item.content}
+                          <h4>{item.content.title}</h4>
+                          <p>{item.content.description}</p>
                         </div>
                       )}
                     </Draggable>
@@ -264,7 +318,8 @@ class TicketBoard extends React.Component {
                             provided.draggableProps.style
                           )}
                         >
-                          {item.content}
+                          <h4>{item.content.title}</h4>
+                          <p>{item.content.description}</p>
                         </div>
                       )}
                     </Draggable>
