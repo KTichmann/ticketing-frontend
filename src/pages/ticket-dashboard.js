@@ -112,7 +112,7 @@ class TicketBoard extends React.Component {
   getList = id => this.state[id]
 
   moveTicket(ticket_id, status) {
-    const data = `` //TODO!!!
+    const data = `` //TODO!!! ADD TICKET ID AND STATUS
     fetch(`${API_URL}/ticket/move`, {
       method: "POST",
       headers: {
