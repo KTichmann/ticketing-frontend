@@ -1,10 +1,11 @@
 import React from "react"
-import Layout from "../components/layout"
 import { withStyles } from "@material-ui/core/styles"
 import PropTypes from "prop-types"
 import Card from "@material-ui/core/Card"
 import CardContent from "@material-ui/core/CardContent"
 import Typography from "@material-ui/core/Typography"
+import { connect } from "react-redux"
+import Layout from "../components/layout"
 const { API_URL } = process.env
 
 const styles = theme => ({
@@ -50,31 +51,16 @@ const styles = theme => ({
 class IndexPage extends React.Component {
   constructor(props) {
     super(props)
+
     this.state = {
       groups: [],
     }
   }
-  componentDidMount() {
-    this.fetchData()
-  }
 
-  fetchData() {
-    fetch(`${API_URL}/group/list`, {
-      method: "POST",
-      headers: {
-        Authorization: window.sessionStorage.getItem("ticketing_token"),
-      },
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      groups: newProps.data.groups,
     })
-      .then(result => result.json())
-      .then(result => {
-        console.log(result)
-        if (result.data) {
-          this.setState({
-            groups: result.data,
-          })
-        }
-      })
-      .catch(error => console.log(error))
   }
 
   render() {
@@ -114,4 +100,10 @@ IndexPage.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(IndexPage)
+const mapStateToProps = state => {
+  return { data: state.groups }
+}
+
+const ConnectedIndex = connect(mapStateToProps)(IndexPage)
+
+export default withStyles(styles)(ConnectedIndex)

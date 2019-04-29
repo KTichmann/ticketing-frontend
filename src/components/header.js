@@ -22,6 +22,9 @@ import astronaut from "../images/avatar.png"
 import Grid from "@material-ui/core/Grid"
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core"
 import { Link } from "gatsby"
+import { connect } from "react-redux"
+import { addGroups } from "../redux/actions/groups"
+
 const { API_URL } = process.env
 
 const drawerWidth = 240
@@ -110,10 +113,15 @@ const styles = theme => ({
   },
 })
 class Header extends React.Component {
-  state = {
-    open: false,
-    groups: [],
+  constructor(props) {
+    super(props)
+    this.state = {
+      open: false,
+      groups: [],
+    }
+    this.fetchData = this.fetchData.bind(this)
   }
+
   componentDidMount() {
     this.fetchData()
   }
@@ -126,10 +134,10 @@ class Header extends React.Component {
     })
       .then(result => result.json())
       .then(result => {
-        console.log(result)
         if (result.data) {
+          this.props.dispatchAddGroups(result.data)
           this.setState({
-            groups: result.data,
+            groups: this.props.data.groups,
           })
         }
       })
@@ -155,8 +163,8 @@ class Header extends React.Component {
   }
 
   render() {
-    const { open } = this.state
-    const { classes } = this.props
+    const { open, groups } = this.state
+    const classes = this.props.classes
 
     return (
       <MuiThemeProvider theme={theme}>
@@ -225,7 +233,7 @@ class Header extends React.Component {
               </Typography>
             </Grid>
             <List className={classes.groupsSection}>
-              {this.state.groups.map(group => (
+              {groups.map(group => (
                 <Link
                   key={group.group_id}
                   to="/ticket-dashboard"
@@ -283,4 +291,17 @@ Header.defaultProps = {
   siteTitle: ``,
 }
 
-export default withStyles(styles, { withTheme: true })(Header)
+const mapStateToProps = state => {
+  return { data: state.groups }
+}
+
+const mapDispatchToProps = dispatch => {
+  return { dispatchAddGroups: groups => dispatch(addGroups(groups)) }
+}
+
+const ConnectedHeader = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Header)
+
+export default withStyles(styles, { withTheme: true })(ConnectedHeader)

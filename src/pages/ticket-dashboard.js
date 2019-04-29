@@ -3,6 +3,9 @@ import Layout from "../components/layout"
 import { withStyles } from "@material-ui/core/styles"
 import PropTypes from "prop-types"
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
+import { addTickets } from "../redux/actions/tickets"
+import { connect } from "react-redux"
+
 const { API_URL } = process.env
 
 //Fetch tickets & display them appropriately
@@ -69,60 +72,86 @@ class TicketBoard extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.location.state) {
+    this.fetchData(this.props)
+  }
+
+  fetchData(props) {
+    if (props.location.state) {
       const token = sessionStorage.getItem("ticketing_token")
-      const group_id = this.props.location.state.group_id
-      fetch(`${API_URL}/ticket/list/${group_id}`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-        .then(result => result.json())
-        .then(result => {
-          if (result.success) {
-            const data = result.data
-            let tickets = data.map(obj => ({
-              id: obj.id,
-              content: {
-                title: obj.title,
-                description: obj.description,
-              },
-              status: obj.status,
-            }))
-            this.setState({
-              toDo: tickets.filter(ticket => ticket.status === "to do"),
-              inProgress: tickets.filter(
-                ticket => ticket.status === "in progress"
-              ),
-              testing: tickets.filter(ticket => ticket.status === "testing"),
-              review: tickets.filter(ticket => ticket.status === "review"),
-              done: tickets.filter(ticket => ticket.status === "done"),
-            })
-          } else {
-            //TODO: Handle unsuccessful call
-          }
+      const group_id = props.location.state.group_id
+      const ticketArr = props.data.tickets.filter(
+        ticketObj => ticketObj.group_id === group_id
+      )
+      if (ticketArr.length > 0) {
+        this.setState(ticketArr[0].tickets)
+      } else {
+        fetch(`${API_URL}/ticket/list/${group_id}`, {
+          headers: {
+            Authorization: token,
+          },
         })
-        .catch(error => {
-          console.log("error: ", error)
-          //TODO: handle error
-        })
+          .then(result => result.json())
+          .then(result => {
+            console.log(result)
+            if (result.success) {
+              const data = result.data
+              let tickets = data.map(obj => ({
+                id: obj.id,
+                content: {
+                  title: obj.title,
+                  description: obj.description,
+                },
+                status: obj.status,
+              }))
+              const ticketsObj = {
+                toDo: tickets.filter(ticket => ticket.status === "toDo"),
+                inProgress: tickets.filter(
+                  ticket => ticket.status === "inProgress"
+                ),
+                testing: tickets.filter(ticket => ticket.status === "testing"),
+                review: tickets.filter(ticket => ticket.status === "review"),
+                done: tickets.filter(ticket => ticket.status === "done"),
+              }
+              props.dispatchAddTickets({ group_id, tickets: ticketsObj })
+              this.setState(ticketsObj)
+            } else {
+              //TODO: Handle unsuccessful call
+            }
+          })
+          .catch(error => {
+            console.log("error: ", error)
+            //TODO: handle error
+          })
+      }
     }
+  }
+
+  componentWillReceiveProps(newProps) {
+    this.fetchData(newProps)
   }
 
   getList = id => this.state[id]
 
   moveTicket(ticket_id, status) {
-    const data = `` //TODO!!! ADD TICKET ID AND STATUS
+    console.log("move ticket: ", ticket_id, status)
+    const data = `ticket_id=${ticket_id}&status=${status}`
+    console.log(data)
     fetch(`${API_URL}/ticket/move`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         Authorization: sessionStorage.getItem("ticketing_token"),
-        ContentType: "application/x-www-form-urlencoded",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
       body: data,
     })
+      .then(response => response.json())
       .then(response => {
-        console.log(response)
+        if (response.success) {
+          console.log("moved!")
+        } else {
+          console.log(response)
+          console.log("not moved!")
+        }
       })
       .catch(error => console.log(error))
   }
@@ -335,8 +364,21 @@ class TicketBoard extends React.Component {
   }
 }
 
+const mapStateToProps = state => {
+  return { data: state.tickets }
+}
+
+const mapDispatchToProps = dispatch => {
+  return { dispatchAddTickets: ticketObj => dispatch(addTickets(ticketObj)) }
+}
+
+const ConnectedTicketBoard = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TicketBoard)
+
 TicketBoard.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(TicketBoard)
+export default withStyles(styles)(ConnectedTicketBoard)
