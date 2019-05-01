@@ -1,5 +1,6 @@
 import React from "react"
 import Layout from "../components/layout"
+import Ticket from "../components/ticket"
 import { withStyles } from "@material-ui/core/styles"
 import PropTypes from "prop-types"
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
@@ -42,13 +43,13 @@ const margin = 20
 const getItemStyle = (isDragging, draggableStyle) => ({
   // some basic styles to make the items look a bit nicer
   userSelect: "none",
-  padding: grid * 2,
+  // padding: grid * 2,
   margin: `0 ${margin}px ${grid}px ${margin}px`,
   height: "10rem",
   width: "15rem",
   boxShadow: "1px 1px 5px 1px rgba(0,0,0,.2)",
   // change background colour if dragging
-  background: isDragging ? "lightgreen" : "white",
+  background: isDragging ? "rgb(220,220,250)" : "white",
 
   // styles we need to apply on draggables
   ...draggableStyle,
@@ -56,7 +57,7 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 
 const getListStyle = isDraggingOver => ({
   borderRight: "1px solid rgba(0,0,0,.3git)",
-  background: isDraggingOver ? "lightblue" : "white",
+  background: isDraggingOver ? "rgba(150,150,250,.2)" : "white",
   padding: grid,
   width: "19rem",
 })
@@ -100,6 +101,8 @@ class TicketBoard extends React.Component {
                 content: {
                   title: obj.title,
                   description: obj.description,
+                  created: obj.created_at,
+                  reporter: obj.reporter_email,
                 },
                 status: obj.status,
               }))
@@ -147,15 +150,31 @@ class TicketBoard extends React.Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          console.log("moved!")
         } else {
           console.log(response)
-          console.log("not moved!")
         }
       })
       .catch(error => console.log(error))
   }
-
+  commentOnTicket(ticket_id, comment) {
+    fetch(`${API_URL}/ticket/admin-comment`, {
+      method: "POST",
+      headers: {
+        Authorization: sessionStorage.getItem("ticketing_token"),
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `id=${ticket_id}&comment=${comment}`,
+    }).then(result => {
+      console.log(result)
+    })
+  }
+  fetchComments(ticket_id) {
+    return fetch(`${API_URL}/ticket/comments/${ticket_id}`)
+      .then(result => result.json())
+      .catch(error => {
+        console.log(error)
+      })
+  }
   onDragEnd = result => {
     const { source, destination, draggableId } = result
     // dropped outside the list
@@ -214,8 +233,16 @@ class TicketBoard extends React.Component {
                             provided.draggableProps.style
                           )}
                         >
-                          <h4>{item.content.title}</h4>
-                          <p>{item.content.description}</p>
+                          <Ticket
+                            created={item.content.created}
+                            reporter={item.content.reporter}
+                            title={item.content.title}
+                            description={item.content.description}
+                            id={item.id}
+                            status="To Do"
+                            getComments={this.fetchComments}
+                            commentOnTicket={this.commentOnTicket}
+                          />
                         </div>
                       )}
                     </Draggable>
@@ -246,8 +273,16 @@ class TicketBoard extends React.Component {
                             provided.draggableProps.style
                           )}
                         >
-                          <h4>{item.content.title}</h4>
-                          <p>{item.content.description}</p>
+                          <Ticket
+                            created={item.content.created}
+                            reporter={item.content.reporter}
+                            title={item.content.title}
+                            description={item.content.description}
+                            id={item.id}
+                            status="In Progress"
+                            getComments={this.fetchComments}
+                            commentOnTicket={this.commentOnTicket}
+                          />
                         </div>
                       )}
                     </Draggable>
@@ -280,8 +315,16 @@ class TicketBoard extends React.Component {
                             provided.draggableProps.style
                           )}
                         >
-                          <h4>{item.content.title}</h4>
-                          <p>{item.content.description}</p>
+                          <Ticket
+                            created={item.content.created}
+                            reporter={item.content.reporter}
+                            title={item.content.title}
+                            description={item.content.description}
+                            id={item.id}
+                            status="Testing"
+                            getComments={this.fetchComments}
+                            commentOnTicket={this.commentOnTicket}
+                          />
                         </div>
                       )}
                     </Draggable>
@@ -312,8 +355,16 @@ class TicketBoard extends React.Component {
                             provided.draggableProps.style
                           )}
                         >
-                          <h4>{item.content.title}</h4>
-                          <p>{item.content.description}</p>
+                          <Ticket
+                            created={item.content.created}
+                            reporter={item.content.reporter}
+                            title={item.content.title}
+                            description={item.content.description}
+                            id={item.id}
+                            status="Review"
+                            getComments={this.fetchComments}
+                            commentOnTicket={this.commentOnTicket}
+                          />
                         </div>
                       )}
                     </Draggable>
@@ -347,8 +398,16 @@ class TicketBoard extends React.Component {
                             provided.draggableProps.style
                           )}
                         >
-                          <h4>{item.content.title}</h4>
-                          <p>{item.content.description}</p>
+                          <Ticket
+                            created={item.content.created}
+                            reporter={item.content.reporter}
+                            title={item.content.title}
+                            description={item.content.description}
+                            id={item.id}
+                            status="Done"
+                            getComments={this.fetchComments}
+                            commentOnTicket={this.commentOnTicket}
+                          />
                         </div>
                       )}
                     </Draggable>
