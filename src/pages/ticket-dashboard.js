@@ -131,6 +131,7 @@ class TicketBoard extends React.Component {
 
   componentWillReceiveProps(newProps) {
     this.fetchData(newProps)
+    console.log("new props")
   }
 
   getList = id => this.state[id]
