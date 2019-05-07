@@ -4,10 +4,10 @@ import TextField from "@material-ui/core/TextField"
 import PropTypes from "prop-types"
 
 const Form = props => (
-  <form style={{ paddingLeft: "2rem" }}>
+  <form style={{ marginLeft: "1rem" }}>
     <p>{props.usernameErrorMessage}</p>
     <TextField
-      style={{ display: "block" }}
+      style={{ display: "block", paddingLeft: "auto" }}
       id="username"
       label="Username"
       margin="normal"

@@ -3,6 +3,10 @@ import Layout from "../components/layout"
 import Ticket from "../components/ticket"
 import { withStyles } from "@material-ui/core/styles"
 import PropTypes from "prop-types"
+import Modal from "@material-ui/core/Modal"
+import Button from "@material-ui/core/Button"
+import TextField from "@material-ui/core/TextField"
+import FormHelperText from "@material-ui/core/FormHelperText"
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 import { addTickets } from "../redux/actions/tickets"
 import { connect } from "react-redux"
@@ -12,7 +16,28 @@ const { API_URL } = process.env
 //Fetch tickets & display them appropriately
 //When ticket is moved, update server...
 
-const styles = theme => ({})
+const styles = theme => ({
+  modal: {
+    display: "flex",
+    justifyContent: "space-between",
+    backgroundColor: "white",
+    width: "50rem",
+    height: "30rem",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    position: "absolute",
+    padding: "3rem",
+    fontFamily: "Lato",
+    overflow: "scroll",
+  },
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    width: "60%",
+    margin: "0px auto",
+  },
+})
 
 const move = (source, destination, droppableSource, droppableDestination) => {
   const sourceClone = Array.from(source)
@@ -70,6 +95,7 @@ class TicketBoard extends React.Component {
     testing: [],
     review: [],
     done: [],
+    addATicketOpen: false,
   }
 
   componentDidMount() {
@@ -207,9 +233,110 @@ class TicketBoard extends React.Component {
       this.setState(state)
     }
   }
+  handleAddTicket(e) {
+    e.preventDefault()
+    const title = document.getElementById("title").value
+    const description = document.getElementById("description").value
+    if (!title || !description) {
+      if (!title) {
+        this.setState({ titleError: true })
+      }
+      if (!description) {
+        this.setState({ descriptionError: true })
+      }
+    } else {
+      this.setState({
+        titleError: false,
+        descriptionError: false,
+      })
+      const data = {
+        title: title,
+        description: description,
+        group_id: this.props.location.state.group_id,
+        reporter_email: sessionStorage.getItem("ticketing_username"),
+      }
+      fetch(`${API_URL}/ticket/create`, {
+        method: "POST",
+        headers: {
+          Authorization: sessionStorage.getItem("ticketing_token"),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then(result => {
+          window.location.reload()
+        })
+        .catch(error => {
+          console.log(error)
+          window.location.reload()
+        })
+    }
+  }
   render() {
     return (
       <Layout>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{
+            textTransform: "none",
+            marginLeft: "90%",
+            marginBottom: "1rem",
+          }}
+          onClick={() => this.setState({ addATicketOpen: true })}
+        >
+          Add a Ticket
+        </Button>
+        <Modal
+          open={this.state.addATicketOpen}
+          onClose={() => this.setState({ addATicketOpen: false })}
+        >
+          <div className={this.classes.modal}>
+            <form className={this.classes.container}>
+              <TextField
+                error={this.state.emptyTitle}
+                id="title"
+                label="Title"
+                className={this.classes.textField}
+                margin="normal"
+                variant="outlined"
+              />
+              <FormHelperText id="title-error-text">
+                {this.state.emptyTitleText}
+              </FormHelperText>
+
+              <TextField
+                error={this.state.emptyDescription}
+                id="description"
+                label="Description"
+                className={this.classes.textField}
+                margin="normal"
+                variant="outlined"
+                multiline
+                rows="6"
+              />
+              <FormHelperText id="description-error-text">
+                {this.state.emptyDescriptionText}
+              </FormHelperText>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                style={{ marginTop: "1rem" }}
+                onClick={e => this.handleAddTicket(e)}
+              >
+                Add Ticket
+              </Button>
+            </form>
+          </div>
+        </Modal>
         <div style={{ display: "flex" }}>
           <DragDropContext onDragEnd={this.onDragEnd}>
             <Droppable droppableId="toDo">

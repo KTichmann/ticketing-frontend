@@ -12,40 +12,46 @@ import { StaticQuery, graphql } from "gatsby"
 import Header from "./header"
 import "./layout.css"
 
-const Layout = ({ children, groups }) => (
-  <StaticQuery
-    query={graphql`
-      query SiteTitleQuery {
-        site {
-          siteMetadata {
-            title
+const Layout = ({ children, groups }) => {
+  if (!sessionStorage.getItem("ticketing_token")) {
+    if (
+      window.location.pathname !== "/user/log-in" &&
+      window.location.pathname !== "/user/sign-up"
+    ) {
+      window.location.replace("/user/log-in")
+    }
+  }
+  return (
+    <StaticQuery
+      query={graphql`
+        query SiteTitleQuery {
+          site {
+            siteMetadata {
+              title
+            }
           }
         }
-      }
-    `}
-    render={data => (
-      <>
-        <Header siteTitle={data.site.siteMetadata.title} />
-        <div
-          id="mainContentLayout"
-          style={{
-            margin: `6rem 3rem`,
-            padding: `0px 1.0875rem 1.45rem`,
-            paddingTop: 0,
-            transition: "margin .4s",
-          }}
-        >
-          <main>{children}</main>
-          <footer>
-            © {new Date().getFullYear()}, Built with
-            {` `}
-            <a href="https://www.gatsbyjs.org">Gatsby</a>
-          </footer>
-        </div>
-      </>
-    )}
-  />
-)
+      `}
+      render={data => (
+        <>
+          <Header siteTitle={data.site.siteMetadata.title} />
+          <div
+            id="mainContentLayout"
+            style={{
+              margin: `5rem 3rem`,
+              padding: `0px 1.0875rem 1.45rem`,
+              paddingTop: 0,
+              transition: "margin .4s",
+            }}
+          >
+            <main>{children}</main>
+            <footer />
+          </div>
+        </>
+      )}
+    />
+  )
+}
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,

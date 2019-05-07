@@ -75,8 +75,16 @@ class LogInPage extends React.Component {
   }
   render() {
     return (
-      <Layout>
-        <h1>Log In</h1>
+      <div
+        style={{
+          fontFamily: "Lato",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -80%)",
+          position: "absolute",
+        }}
+      >
+        <h1 style={{ textAlign: "center" }}>Log In</h1>
         <div className="user-form">
           <Form
             usernameError={this.state.usernameError}
@@ -90,7 +98,7 @@ class LogInPage extends React.Component {
             Don't have an account? <Link to="/user/sign-up">Sign up here</Link>
           </div>
         </div>
-      </Layout>
+      </div>
     )
   }
 }

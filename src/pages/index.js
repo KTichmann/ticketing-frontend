@@ -5,6 +5,7 @@ import Card from "@material-ui/core/Card"
 import CardContent from "@material-ui/core/CardContent"
 import Typography from "@material-ui/core/Typography"
 import { connect } from "react-redux"
+import { Link } from "gatsby"
 import Layout from "../components/layout"
 const { API_URL } = process.env
 
@@ -68,22 +69,28 @@ class IndexPage extends React.Component {
       <Layout>
         <div className={this.props.classes.root}>
           {this.state.groups.map(group => (
-            <Card className={this.props.classes.card} key={group.group_id}>
-              <CardContent className={this.props.classes.cardContent}>
-                <Typography
-                  className={this.props.classes.title}
-                  color="textSecondary"
-                >
-                  {group.title}
-                </Typography>
-                <Typography
-                  className={this.props.classes.text}
-                  color="textSecondary"
-                >
-                  {group.description}
-                </Typography>
-              </CardContent>
-            </Card>
+            <Link
+              key={group.group_id}
+              to="/ticket-dashboard"
+              state={{ group_id: group.group_id }}
+            >
+              <Card className={this.props.classes.card} key={group.group_id}>
+                <CardContent className={this.props.classes.cardContent}>
+                  <Typography
+                    className={this.props.classes.title}
+                    color="textSecondary"
+                  >
+                    {group.title}
+                  </Typography>
+                  <Typography
+                    className={this.props.classes.text}
+                    color="textSecondary"
+                  >
+                    {group.description}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
           <div
             className={`${this.props.classes.card} ${

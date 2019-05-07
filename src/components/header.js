@@ -283,14 +283,19 @@ class Header extends React.Component {
                   <ListItemText primary="Dashboard" />
                 </ListItem>
               </Link>
-              <Link>
+              <div
+                onClick={() => {
+                  sessionStorage.removeItem("ticketing_token")
+                  window.location.reload()
+                }}
+              >
                 <ListItem button>
                   <ListItemIcon color="inherit">
                     <SupervisorAccountIcon style={{ color: "white" }} />
                   </ListItemIcon>
                   <ListItemText primary="Log Out" />
                 </ListItem>
-              </Link>
+              </div>
             </List>
           </Drawer>
         </header>

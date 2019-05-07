@@ -91,9 +91,17 @@ class SignUpPage extends React.Component {
   }
   render() {
     return (
-      <Layout>
-        <h1>Sign Up</h1>
-        <div className="user-form">
+      <div
+        style={{
+          fontFamily: "Lato",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -80%)",
+          position: "absolute",
+        }}
+      >
+        <h1 style={{ textAlign: "center", fontFamily: "Lato" }}>Sign Up</h1>
+        <div style={{ margin: "0px auto" }} className="user-form">
           <Form
             usernameError={this.state.usernameError}
             passwordError={this.state.passwordError}
@@ -105,12 +113,12 @@ class SignUpPage extends React.Component {
             email={true}
             buttonText="Sign Up"
           />
-          <div className="login-message">
+          <div className="login-message" style={{ textAlign: "center" }}>
             Already a user? <Link to="/user/log-in">Log in here</Link>
           </div>
         </div>
         <Link to="/user/verify" id="relocate" />
-      </Layout>
+      </div>
     )
   }
 }

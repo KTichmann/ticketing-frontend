@@ -582,3 +582,6 @@ pre tt:after {
     font-size: 100%;
   }
 }
+a {
+  text-decoration: none !important;
+}
