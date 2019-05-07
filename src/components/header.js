@@ -46,6 +46,14 @@ const theme = createMuiTheme({
 })
 
 const styles = theme => ({
+  "@global": {
+    "*::-webkit-scrollbar": {
+      width: ".5rem",
+    },
+    "*::-webkit-scrollbar-thumb": {
+      backgroundColor: "rgba(0,0,0,1)",
+    },
+  },
   root: {
     display: "flex",
     color: "white !important",
@@ -101,6 +109,8 @@ const styles = theme => ({
   groupsSection: {
     boxShadow: "0px -2px 1px 1px rgba(0,0,0,.1)",
     paddingTop: "0px",
+    height: "65%",
+    overflow: "scroll",
   },
   group: {
     borderBottom: ".5px solid rgba(255,255,255,.1)",
@@ -257,24 +267,30 @@ class Header extends React.Component {
               className={classes.drawerPaper}
               style={{ bottom: "0rem", position: "fixed", color: "white" }}
             >
-              <ListItem button>
-                <ListItemIcon color="inherit">
-                  <AddBoxIcon style={{ color: "white" }} />
-                </ListItemIcon>
-                <ListItemText primary="Create a Group" />
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon color="inherit">
-                  <DashboardIcon style={{ color: "white" }} />
-                </ListItemIcon>
-                <ListItemText primary="Dashboard" />
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon color="inherit">
-                  <SupervisorAccountIcon style={{ color: "white" }} />
-                </ListItemIcon>
-                <ListItemText primary="Profile" />
-              </ListItem>
+              <Link to="/group/create">
+                <ListItem button>
+                  <ListItemIcon color="inherit">
+                    <AddBoxIcon style={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Create a Group" />
+                </ListItem>
+              </Link>
+              <Link to="/">
+                <ListItem button>
+                  <ListItemIcon color="inherit">
+                    <DashboardIcon style={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Dashboard" />
+                </ListItem>
+              </Link>
+              <Link>
+                <ListItem button>
+                  <ListItemIcon color="inherit">
+                    <SupervisorAccountIcon style={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Log Out" />
+                </ListItem>
+              </Link>
             </List>
           </Drawer>
         </header>

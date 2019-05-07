@@ -2,6 +2,7 @@ import React from "react"
 import Layout from "../../components/layout"
 import { withStyles } from "@material-ui/core/styles"
 import PropTypes from "prop-types"
+import { Link } from "gatsby"
 import TextField from "@material-ui/core/TextField"
 import Button from "@material-ui/core/Button"
 import List from "@material-ui/core/List"
@@ -32,6 +33,7 @@ class CreatePage extends React.Component {
       emptyDescription: false,
       emtpyTitleText: "",
       emptyDescriptionText: "",
+      group_id: "",
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -81,7 +83,6 @@ class CreatePage extends React.Component {
         })
       }
     } else {
-      console.log(sessionStorage.getItem("ticketing_token"))
       const title = this.state.title
       const description = this.state.description
       const data = `title=${title}&description=${description}`
@@ -96,9 +97,36 @@ class CreatePage extends React.Component {
         .then(result => result.json())
         .then(result => {
           if (result.success) {
-            this.state.users.map(user => {
-              fetch(`${API_URL}/group/add/${user}`)
+            this.setState({
+              group_id: result.data.group_id,
             })
+            let adminData = {
+              group_id: result.data.group_id,
+              admins: this.state.users,
+            }
+            if (this.state.users.length > 0) {
+              fetch(`${API_URL}/group/add-admin`, {
+                method: "POST",
+                headers: {
+                  Authorization: sessionStorage.getItem("ticketing_token"),
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(adminData),
+              })
+                .then(result => result.json())
+                .then(result => {
+                  if (result.success) {
+                    document.getElementById("redirectToNewGroup").click()
+                  } else {
+                    console.log("no bueno!")
+                  }
+                })
+              this.state.users.map(user => {
+                fetch(`${API_URL}/group/add/${user}`)
+              })
+            } else {
+              document.getElementById("redirectToNewGroup").click()
+            }
           }
         })
         .catch(error => {
@@ -185,6 +213,11 @@ class CreatePage extends React.Component {
             Create Group
           </Button>
         </form>
+        <Link
+          id="redirectToNewGroup"
+          to="/ticket-dashboard"
+          state={{ group_id: this.state.group_id }}
+        />
       </Layout>
     )
   }

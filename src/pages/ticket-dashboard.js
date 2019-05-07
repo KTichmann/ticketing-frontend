@@ -56,7 +56,7 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 })
 
 const getListStyle = isDraggingOver => ({
-  borderRight: "1px solid rgba(0,0,0,.3git)",
+  borderRight: "1px solid rgba(23,9,45,.2)",
   background: isDraggingOver ? "rgba(150,150,250,.2)" : "white",
   padding: grid,
   width: "19rem",
@@ -218,6 +218,7 @@ class TicketBoard extends React.Component {
                   ref={provided.innerRef}
                   style={getListStyle(snapshot.isDraggingOver)}
                 >
+                  <h5 style={{ textAlign: "center" }}>To Do</h5>
                   {this.state.toDo.map((item, index) => (
                     <Draggable
                       key={item.id}
@@ -258,6 +259,7 @@ class TicketBoard extends React.Component {
                   ref={provided.innerRef}
                   style={getListStyle(snapshot.isDraggingOver)}
                 >
+                  <h5 style={{ textAlign: "center" }}>In Progress</h5>
                   {this.state.inProgress.map((item, index) => (
                     <Draggable
                       key={item.id}
@@ -298,6 +300,7 @@ class TicketBoard extends React.Component {
                   ref={provided.innerRef}
                   style={getListStyle(snapshot.isDraggingOver)}
                 >
+                  <h5 style={{ textAlign: "center" }}>Testing</h5>
                   {this.state.testing.map((item, index) => (
                     <Draggable
                       key={item.id}
@@ -340,6 +343,7 @@ class TicketBoard extends React.Component {
                   ref={provided.innerRef}
                   style={getListStyle(snapshot.isDraggingOver)}
                 >
+                  <h5 style={{ textAlign: "center" }}>Review</h5>
                   {this.state.review.map((item, index) => (
                     <Draggable
                       key={item.id}
@@ -383,6 +387,7 @@ class TicketBoard extends React.Component {
                     borderRight: "none",
                   }}
                 >
+                  <h5 style={{ textAlign: "center" }}>Done</h5>
                   {this.state.done.map((item, index) => (
                     <Draggable
                       key={item.id}
