@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography"
 import { connect } from "react-redux"
 import { Link } from "gatsby"
 import Layout from "../components/layout"
+import withRoot from "../withRoot"
 const { API_URL } = process.env
 
 const styles = theme => ({
@@ -113,4 +114,4 @@ const mapStateToProps = state => {
 
 const ConnectedIndex = connect(mapStateToProps)(IndexPage)
 
-export default withStyles(styles)(ConnectedIndex)
+export default withRoot(withStyles(styles)(ConnectedIndex))

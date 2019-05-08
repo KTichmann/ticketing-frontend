@@ -6,6 +6,7 @@ import TextField from "@material-ui/core/TextField"
 import Button from "@material-ui/core/Button"
 import Comment from "./comment"
 import { withStyles, withTheme } from "@material-ui/core/styles"
+import withRoot from "../withRoot"
 
 const styles = theme => ({
   ticket: {
@@ -99,16 +100,18 @@ const Ticket = props => {
               color="primary"
               style={{ textTransform: "none" }}
               onClick={() => {
-                setComments([
-                  {
-                    ticket_id: "new",
-                    content: commentText,
-                    commenter: sessionStorage.getItem("ticketing_username"),
-                    created_at: moment(),
-                  },
-                  ...comments,
-                ])
-                props.commentOnTicket(id, commentText)
+                if (typeof window !== "undefined") {
+                  setComments([
+                    {
+                      ticket_id: "new",
+                      content: commentText,
+                      commenter: sessionStorage.getItem("ticketing_username"),
+                      created_at: moment(),
+                    },
+                    ...comments,
+                  ])
+                  props.commentOnTicket(id, commentText)
+                }
               }}
             >
               Comment
@@ -174,4 +177,4 @@ Ticket.propTypes = {
 
 Ticket.defaultProps = {}
 
-export default withStyles(styles, { withtheme: true })(Ticket)
+export default withRoot(withStyles(styles, { withtheme: true })(Ticket))

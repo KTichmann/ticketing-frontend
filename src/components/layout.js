@@ -13,12 +13,15 @@ import Header from "./header"
 import "./layout.css"
 
 const Layout = ({ children, groups }) => {
-  if (!sessionStorage.getItem("ticketing_token")) {
-    if (
-      window.location.pathname !== "/user/log-in" &&
-      window.location.pathname !== "/user/sign-up"
-    ) {
-      window.location.replace("/user/log-in")
+  //for production build (gatsby shenanigans)
+  if (typeof window !== "undefined") {
+    if (!sessionStorage.getItem("ticketing_token")) {
+      if (
+        window.location.pathname !== "/user/log-in" &&
+        window.location.pathname !== "/user/sign-up"
+      ) {
+        window.location.replace("/user/log-in")
+      }
     }
   }
   return (

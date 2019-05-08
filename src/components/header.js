@@ -24,6 +24,7 @@ import { createMuiTheme, MuiThemeProvider } from "@material-ui/core"
 import { Link } from "gatsby"
 import { connect } from "react-redux"
 import { addGroups } from "../redux/actions/groups"
+import withRoot from "../withRoot"
 
 const { API_URL } = process.env
 
@@ -239,7 +240,9 @@ class Header extends React.Component {
                 className={classes.bigAvatar}
               />
               <Typography variant="h6" color="inherit" noWrap>
-                {sessionStorage.getItem("ticketing_username")}
+                {typeof window === "undefined" //Gatsby production build shenanigans
+                  ? ""
+                  : sessionStorage.getItem("ticketing_username")}
               </Typography>
             </Grid>
             <List className={classes.groupsSection}>

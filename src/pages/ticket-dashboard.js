@@ -10,7 +10,7 @@ import FormHelperText from "@material-ui/core/FormHelperText"
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 import { addTickets } from "../redux/actions/tickets"
 import { connect } from "react-redux"
-
+import withRoot from "../withRoot"
 const { API_URL } = process.env
 
 //Fetch tickets & display them appropriately
@@ -85,6 +85,7 @@ const getListStyle = isDraggingOver => ({
   background: isDraggingOver ? "rgba(150,150,250,.2)" : "white",
   padding: grid,
   width: "19rem",
+  minWidth: "19rem",
 })
 
 class TicketBoard extends React.Component {
@@ -106,58 +107,58 @@ class TicketBoard extends React.Component {
     if (props.location.state) {
       const token = sessionStorage.getItem("ticketing_token")
       const group_id = props.location.state.group_id
-      const ticketArr = props.data.tickets.filter(
-        ticketObj => ticketObj.group_id === group_id
-      )
-      if (ticketArr.length > 0) {
-        this.setState(ticketArr[0].tickets)
-      } else {
-        fetch(`${API_URL}/ticket/list/${group_id}`, {
-          headers: {
-            Authorization: token,
-          },
-        })
-          .then(result => result.json())
-          .then(result => {
-            console.log(result)
-            if (result.success) {
-              const data = result.data
-              let tickets = data.map(obj => ({
-                id: obj.id,
-                content: {
-                  title: obj.title,
-                  description: obj.description,
-                  created: obj.created_at,
-                  reporter: obj.reporter_email,
-                },
-                status: obj.status,
-              }))
-              const ticketsObj = {
-                toDo: tickets.filter(ticket => ticket.status === "toDo"),
-                inProgress: tickets.filter(
-                  ticket => ticket.status === "inProgress"
-                ),
-                testing: tickets.filter(ticket => ticket.status === "testing"),
-                review: tickets.filter(ticket => ticket.status === "review"),
-                done: tickets.filter(ticket => ticket.status === "done"),
-              }
-              props.dispatchAddTickets({ group_id, tickets: ticketsObj })
-              this.setState(ticketsObj)
-            } else {
-              //TODO: Handle unsuccessful call
+      // const ticketArr = props.data.tickets.filter(
+      //   ticketObj => ticketObj.group_id === group_id
+      // )
+      // console.log("ticketArr: ", ticketArr)
+      // if (ticketArr.length > 0) {
+      //   this.setState(ticketArr[0].tickets)
+      // } else {
+      fetch(`${API_URL}/ticket/list/${group_id}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+        .then(result => result.json())
+        .then(result => {
+          console.log(result)
+          if (result.success) {
+            const data = result.data
+            let tickets = data.map(obj => ({
+              id: obj.id,
+              content: {
+                title: obj.title,
+                description: obj.description,
+                created: obj.created_at,
+                reporter: obj.reporter_email,
+              },
+              status: obj.status,
+            }))
+            const ticketsObj = {
+              toDo: tickets.filter(ticket => ticket.status === "toDo"),
+              inProgress: tickets.filter(
+                ticket => ticket.status === "inProgress"
+              ),
+              testing: tickets.filter(ticket => ticket.status === "testing"),
+              review: tickets.filter(ticket => ticket.status === "review"),
+              done: tickets.filter(ticket => ticket.status === "done"),
             }
-          })
-          .catch(error => {
-            console.log("error: ", error)
-            //TODO: handle error
-          })
-      }
+            props.dispatchAddTickets({ group_id, tickets: ticketsObj })
+            this.setState(ticketsObj)
+          } else {
+            //TODO: Handle unsuccessful call
+          }
+        })
+        .catch(error => {
+          console.log("error: ", error)
+          //TODO: handle error
+        })
     }
+    // }
   }
 
   componentWillReceiveProps(newProps) {
     this.fetchData(newProps)
-    console.log("new props")
   }
 
   getList = id => this.state[id]
@@ -220,7 +221,6 @@ class TicketBoard extends React.Component {
       state[colId] = items
       this.setState(state)
     } else {
-      this.moveTicket(draggableId, destination.droppableId)
       const result = move(
         this.getList(source.droppableId),
         this.getList(destination.droppableId),
@@ -231,6 +231,7 @@ class TicketBoard extends React.Component {
       state[source.droppableId] = result[source.droppableId]
       state[destination.droppableId] = result[destination.droppableId]
       this.setState(state)
+      this.moveTicket(draggableId, destination.droppableId)
     }
   }
   handleAddTicket(e) {
@@ -264,11 +265,15 @@ class TicketBoard extends React.Component {
         body: JSON.stringify(data),
       })
         .then(result => {
-          window.location.reload()
+          this.setState({
+            addATicketOpen: false,
+          })
         })
         .catch(error => {
           console.log(error)
-          window.location.reload()
+          this.setState({
+            addATicketOpen: false,
+          })
         })
     }
   }
@@ -289,7 +294,10 @@ class TicketBoard extends React.Component {
         </Button>
         <Modal
           open={this.state.addATicketOpen}
-          onClose={() => this.setState({ addATicketOpen: false })}
+          onClose={() => {
+            this.fetchData(this.props)
+            this.setState({ addATicketOpen: false })
+          }}
         >
           <div className={this.classes.modal}>
             <form className={this.classes.container}>
@@ -573,4 +581,4 @@ TicketBoard.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(ConnectedTicketBoard)
+export default withRoot(withStyles(styles)(ConnectedTicketBoard))

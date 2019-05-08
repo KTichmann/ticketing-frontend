@@ -7,16 +7,19 @@
   "dependencies": {
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
-    "@material-ui/styles": "^3.0.0-alpha.10",
+    "@material-ui/styles": "^4.0.0-beta.1",
     "@material-ui/system": "^3.0.0-alpha.2",
+    "babel-plugin-styled-components": "^1.10.0",
     "classes": "^0.3.0",
     "classnames": "^2.2.6",
     "gatsby": "^2.4.2",
     "gatsby-image": "^2.0.37",
     "gatsby-plugin-manifest": "^2.0.28",
+    "gatsby-plugin-material-ui": "^2.0.0-beta.0",
     "gatsby-plugin-offline": "^2.0.25",
     "gatsby-plugin-react-helmet": "^3.0.12",
     "gatsby-plugin-sharp": "^2.0.32",
+    "gatsby-plugin-styled-components": "^3.0.7",
     "gatsby-source-filesystem": "^2.0.29",
     "gatsby-transformer-sharp": "^2.1.17",
     "prop-types": "^15.7.2",
@@ -24,8 +27,10 @@
     "react-beautiful-dnd": "^11.0.0",
     "react-dom": "^16.8.6",
     "react-helmet": "^5.2.0",
+    "react-jss": "^8.6.1",
     "react-redux": "^7.0.3",
-    "redux": "^4.0.1"
+    "redux": "^4.0.1",
+    "styled-components": "^4.2.0"
   },
   "devDependencies": {
     "prettier": "^1.16.4"

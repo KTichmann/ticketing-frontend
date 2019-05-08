@@ -1,7 +1,7 @@
 import React from "react"
 import moment from "moment"
 
-export default (Comment = props => (
+const Comment = props => (
   <div
     key={props.ticket_id}
     id={props.ticket_id}
@@ -27,4 +27,6 @@ export default (Comment = props => (
     </div>
     <p style={{ marginLeft: 20, maxWidth: "90%" }}>{props.content}</p>
   </div>
-))
+)
+
+export default Comment
