@@ -57,7 +57,7 @@ class LogInPage extends React.Component {
           if (res.success) {
             window.sessionStorage.setItem("ticketing_token", res.token)
             window.sessionStorage.setItem("ticketing_username", username)
-            window.location.href = "/"
+            document.getElementById("redirect_to_home").click()
           } else if (res.message.includes("email not verified")) {
             this.setState({
               usernameErrorMessage: "Email not verified",
@@ -98,6 +98,7 @@ class LogInPage extends React.Component {
             Don't have an account? <Link to="/user/sign-up">Sign up here</Link>
           </div>
         </div>
+        <Link to="/" id="redirect_to_home" />
       </div>
     )
   }
