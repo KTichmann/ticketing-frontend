@@ -6,7 +6,6 @@ import TextField from "@material-ui/core/TextField"
 import Button from "@material-ui/core/Button"
 import Comment from "./comment"
 import { withStyles, withTheme } from "@material-ui/core/styles"
-import withRoot from "../withRoot"
 
 const styles = theme => ({
   ticket: {
@@ -177,4 +176,4 @@ Ticket.propTypes = {
 
 Ticket.defaultProps = {}
 
-export default withRoot(withStyles(styles, { withtheme: true })(Ticket))
+export default withStyles(styles, { withtheme: true })(Ticket)

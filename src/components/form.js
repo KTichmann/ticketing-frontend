@@ -2,6 +2,9 @@ import React from "react"
 import Button from "@material-ui/core/Button"
 import TextField from "@material-ui/core/TextField"
 import PropTypes from "prop-types"
+import { withStyles } from "@material-ui/core/styles"
+
+const styles = theme => ({})
 
 const Form = props => (
   <form style={{ marginLeft: "1rem" }}>
@@ -70,4 +73,4 @@ Form.defaultProps = {
   emailError: false,
 }
 
-export default Form
+export default withStyles(styles)(Form)

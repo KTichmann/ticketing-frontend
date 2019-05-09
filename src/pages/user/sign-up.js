@@ -1,9 +1,11 @@
 import React from "react"
 import { Link } from "gatsby"
-import Layout from "../../components/layout"
 import Form from "../../components/form"
+import { withStyles } from "@material-ui/core/styles"
+
 const { API_URL } = process.env
 
+const styles = theme => ({})
 class SignUpPage extends React.Component {
   constructor(props) {
     super(props)
@@ -123,4 +125,4 @@ class SignUpPage extends React.Component {
   }
 }
 
-export default SignUpPage
+export default withStyles(styles)(SignUpPage)

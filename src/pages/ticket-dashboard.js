@@ -10,7 +10,6 @@ import FormHelperText from "@material-ui/core/FormHelperText"
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 import { addTickets } from "../redux/actions/tickets"
 import { connect } from "react-redux"
-import withRoot from "../withRoot"
 const { API_URL } = process.env
 
 //Fetch tickets & display them appropriately
@@ -581,4 +580,4 @@ TicketBoard.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withRoot(withStyles(styles)(ConnectedTicketBoard))
+export default withStyles(styles)(ConnectedTicketBoard)

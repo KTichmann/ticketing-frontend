@@ -9,7 +9,6 @@ import List from "@material-ui/core/List"
 import ListItem from "@material-ui/core/ListItem"
 import ListItemText from "@material-ui/core/ListItemText"
 import FormHelperText from "@material-ui/core/FormHelperText"
-import withRoot from "../../withRoot"
 
 const { API_URL } = process.env
 
@@ -228,4 +227,4 @@ CreatePage.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withRoot(withStyles(styles)(CreatePage))
+export default withStyles(styles)(CreatePage)

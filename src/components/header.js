@@ -24,7 +24,6 @@ import { createMuiTheme, MuiThemeProvider } from "@material-ui/core"
 import { Link } from "gatsby"
 import { connect } from "react-redux"
 import { addGroups } from "../redux/actions/groups"
-import withRoot from "../withRoot"
 
 const { API_URL } = process.env
 

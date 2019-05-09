@@ -8,19 +8,20 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { StaticQuery, graphql } from "gatsby"
-
 import Header from "./header"
 import "./layout.css"
+
+const { PREFIX_PATH } = process.env
 
 const Layout = ({ children, groups }) => {
   //for production build (gatsby shenanigans)
   if (typeof window !== "undefined") {
     if (!sessionStorage.getItem("ticketing_token")) {
       if (
-        window.location.pathname !== "/ticketing-dashboard/user/log-in" &&
-        window.location.pathname !== "/ticketing-dashboard/user/sign-up"
+        window.location.pathname !== `${PREFIX_PATH}/user/log-in` &&
+        window.location.pathname !== `${PREFIX_PATH}/user/sign-up`
       ) {
-        window.location.replace("/ticketing-dashboard/user/log-in")
+        window.location.replace(`${PREFIX_PATH}/user/log-in`)
       }
     }
   }
