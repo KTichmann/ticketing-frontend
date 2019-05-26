@@ -17,13 +17,8 @@ const Layout = ({ children, groups }) => {
   if (typeof window !== "undefined") {
     if (!sessionStorage.getItem("ticketing_token")) {
       if (
-<<<<<<< HEAD
-        window.location.pathname !== "ticketing-dashboard/user/log-in" &&
-        window.location.pathname !== "ticketing-dashboard/user/sign-up"
-=======
         window.location.pathname !== "/ticketing-dashboard/user/log-in" &&
         window.location.pathname !== "/ticketing-dashboard/user/sign-up"
->>>>>>> dbec3d7092910915ef987214526c63f12d82de96
       ) {
         window.location.replace("/ticketing-dashboard/user/log-in")
       }
