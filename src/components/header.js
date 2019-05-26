@@ -199,7 +199,7 @@ class Header extends React.Component {
                 false
               ) : (
                 <Typography variant="h6" color="inherit" noWrap>
-                  bOnline
+                  Ticketing
                 </Typography>
               )}
             </Toolbar>
