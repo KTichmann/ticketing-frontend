@@ -7,7 +7,7 @@
 
 import React from "react"
 import PropTypes from "prop-types"
-import { StaticQuery, graphql } from "gatsby"
+import { StaticQuery, graphql, Link } from "gatsby"
 
 import Header from "./header"
 import "./layout.css"
@@ -20,7 +20,9 @@ const Layout = ({ children, groups }) => {
         window.location.pathname !== "/ticketing-dashboard/user/log-in" &&
         window.location.pathname !== "/ticketing-dashboard/user/sign-up"
       ) {
-        window.location.replace("/ticketing-dashboard/user/log-in")
+        window.addEventListener("load", () => {
+          document.getElementById("redirect").click()
+        })
       }
     }
   }
@@ -49,6 +51,7 @@ const Layout = ({ children, groups }) => {
           >
             <main>{children}</main>
             <footer />
+            <Link id="redirect" to="/user/log-in" />
           </div>
         </>
       )}

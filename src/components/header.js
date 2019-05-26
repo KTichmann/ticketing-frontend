@@ -220,7 +220,7 @@ class Header extends React.Component {
                 noWrap
                 style={{ left: "30px", position: "fixed", color: "white" }}
               >
-                bOnline
+                Ticketing
               </Typography>
               <IconButton color="inherit" onClick={this.handleDrawerClose}>
                 <ChevronLeftIcon />
