@@ -62,7 +62,7 @@ class LogInPage extends React.Component {
           if (res.success) {
             window.sessionStorage.setItem("ticketing_token", res.token)
             window.sessionStorage.setItem("ticketing_username", username)
-            document.getElementById("redirect_to_home").click
+            document.getElementById("redirect_to_home").click()
           } else if (res.message.includes("email not verified")) {
             this.setState({
               usernameErrorMessage: "Email not verified",
@@ -80,38 +80,35 @@ class LogInPage extends React.Component {
   }
   render() {
     return (
-      <StylesProvider generateClassName={generateClassName}>
-        <div
-          style={{
-            fontFamily: "Lato",
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -80%)",
-            position: "absolute",
-          }}
-        >
-          <h1 style={{ textAlign: "center" }}>Log In</h1>
-          <p style={{ textAlign: "center" }}>
-            Use the details below to test: <br /> Username: testUser <br />
-            Password: testUser
-          </p>
-          <div className="user-form">
-            <Form
-              usernameError={this.state.usernameError}
-              passwordError={this.state.passwordError}
-              usernameErrorMessage={this.state.usernameErrorMessage}
-              passwordErrorMessage={this.state.passwordErrorMessage}
-              handleClick={this.handleClick}
-              buttonText="Log In"
-            />
-            <div className="login-message">
-              Don't have an account?{" "}
-              <Link to="/user/sign-up">Sign up here</Link>
-            </div>
+      <div
+        style={{
+          fontFamily: "Lato",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -80%)",
+          position: "absolute",
+        }}
+      >
+        <h1 style={{ textAlign: "center" }}>Log In</h1>
+        <p style={{ textAlign: "center" }}>
+          Use the details below to test: <br /> Username: testUser <br />
+          Password: testUser
+        </p>
+        <div className="user-form">
+          <Form
+            usernameError={this.state.usernameError}
+            passwordError={this.state.passwordError}
+            usernameErrorMessage={this.state.usernameErrorMessage}
+            passwordErrorMessage={this.state.passwordErrorMessage}
+            handleClick={this.handleClick}
+            buttonText="Log In"
+          />
+          <div className="login-message">
+            Don't have an account? <Link to="/user/sign-up">Sign up here</Link>
           </div>
-          <Link to="/" id="redirect_to_home" />
         </div>
-      </StylesProvider>
+        <Link to="/" id="redirect_to_home" />
+      </div>
     )
   }
 }
